@@ -20,8 +20,8 @@
 </tr>
 <tr>
 <td>October 2025</td>
-<td>1.1</td>
-<td>Version 1.1 open for public comment</td>
+<td>2.0</td>
+<td>Version 2.0 open for public comment</td>
 </tr>
 </tbody>
 </table>
