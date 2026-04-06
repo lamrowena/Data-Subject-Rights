@@ -14,14 +14,14 @@
 <td><strong>Comments</strong></td>
 </tr>
 <tr>
+<td>April 2026</td>
+<td>2.0</td>
+<td>Version 2.0 released</td>
+</tr>	
+<tr>
 <td>May 2024</td>
 <td>1.0</td>
 <td>Version 1.0 released</td>
-</tr>
-<tr>
-<td>October 2025</td>
-<td>2.0</td>
-<td>Version 2.0 open for public comment</td>
 </tr>
 </tbody>
 </table>
@@ -428,7 +428,7 @@
 }
 .
 {
-    "version": "1.0",
+    "version": "2.0",
     "jti": "unique_jwt_identifier",
     "iss": "publisher1.com",
     "iat": 1693459424
@@ -449,7 +449,7 @@
 }
 .
 {
-    "version": "1.0",
+    "version": "2.0",
     "orJWT": "base64url_header.base64url_payload.base64url_signature",
     "jti": "unique_jwt_identifier",
     "iss": "vendor1.com",
@@ -475,96 +475,166 @@
 }
 .
 {
-    "version": "1.0",
+    "version": "2.0",
     "rqJWT": "original_jwt_information",
     "jti": "6G7H8J",
     "iss": "vendor2.com",
     "iat": 1693459424,
-    "rqaResultCode": 2,
-    "rqaResultString": "Invalid token"
-    "oraResultCode": 2,
-    "oraResultString": "Invalid token"
+    "raResultCode": 14201,
+    "raResultString": "rq_unsupported_identifier_type"
 }
 ```
 
 <h4>Result Codes</h4>
 <p>When requests are processed successfully, recipients are expected to respond with an HTTP 202 status code indicating the request was accepted. In cases where an error is encountered, recipients should respond with an HTTP 400 status code to indicate the failure. Additionally, recipients should include the defined Result Code of the error encountered in the acJWT response payload raResultCode claim and optionally a string with additional details about the error in the acJWT raResultString claim.</p>
 <p>For guidelines on error handling, please refer to the following table:</p>
-<p>*Result code should be set in both rqaResultCode and oraResultCode
-<p>**Result code only applies to rqJWT </p>
 <div>
   <table>
-    <tbody>
-      <tr>
-        <td>
-          <span style="color:rgb(255, 255, 255);">
-            <strong>Result Code</strong>
-          </span>
-        </td>
-        <td>
-          <span style="color:rgb(255, 255, 255);">
-            <strong>Description</strong>
-          </span>
-        </td>
-      </tr>
-      <tr>
-        <td>0</td>
-        <td><strong>Successful:</strong> Recipient has acknowledged successful receipt of the deletion request.</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td><strong>Hosted JSON error:</strong>
-        <p>Could not connect to the domain listed in <code>rqJWT/orJWT</code> iss claim: <code>{rqJWT/orJWT iss}</code>.</p>
-        <p>Could not find the dsrdelete.json file for the <code>rqJWT/orJWT</code> issuer: <code>{rqJT/orJWT iss}</code>.</p>
-        <p>Could not find the jwksUri entry in the dsrdelete.json for the <code>rqJWT/orJWT</code> issuer: <code>{rqJT/orJWT iss</code>}.</p>
-        <p>Could not find the keys file: <code>{rq/or dsrdelete.json jwksUri}</code> identified in the jwksUri entry in the dsrdelete.json for the <code>rqJWT/orJWT</code> issuer: <code>{rqJT/orJWT iss}</code>.</p>
-        <p>Could not find the key with kid: <code>{rqJT/orJWT kid}</code> in keys file identified: <code>{rq/or dsrdelete.json jwksUri}</code> identified in the jwksUri entry in the dsrdelete.json for the <code>rqJWT/orJWT</code> issuer: <code>{rqJT/orJWT iss}</code>.</p>
-        <p>Request kid: <code>{rqJT/orJWT kid}</code> alg claim: <code>{rqJT/orJWT alg}</code> does not match the alg claim: <code>{key file alg}</code> in the keys file: <code>{rq/or dsrdelete.json jwksUri}</code> for the kid.<p></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td><strong>Invalid token:</strong> The <code>rqJWT/orJWT</code> could not be successfully decoded and parsed due to a structural invalidity. JSON token identifier: <code>{rqJT/orJWT jti}</code> </td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td><strong>Invalid token signature:</strong> The signature provided in the <code>rqJWT/orJWT</code> is invalid, indicating possible issues with the key or algorithm. JSON token identifier: <code>{rqJT/orJWT jti}</code></td>
-      </tr>
-      <tr>
-        <td>4</td>
-        <td><strong>Malformed token:</strong> The <code>rqJWT/orJWT</code> is missing required claims, leading to a malformed request. Missing field detected: <code>{rqJT/orJWT field}</code></td>
-      </tr>
-      <tr>
-        <td>5</td>
-        <td><p><strong>Invalid token timestamp:</strong> The timestamp provided in the <code>rqJWT/orJWT</code> is invalid: <code>{rqJT/orJWT timestamp}</code>. The timestamp is <code>{relevant error case}</code>.</p>
-        <p>Relevant error cases:</p>
-        <ul>
-        <li>timestamp value which is not a positive integeer
-        <li>too far in the future: issued more than 5 minutes ahead of token receipt
-        </ul>
-        </td>        
-      </tr>
-      <tr>
-        <td>6*</td>
-        <td><strong>Non-sequential token timestamp:</strong> The timestamp of <code>rqJWT: {rqJWT timestamp}</code> precedes the timestamp of <code>orJWT: {orJWT timestamp}</code></td>
-      </tr>
-      <tr>
-        <td>7**</td>
-        <td><strong>Unsupported identifier type:</strong> The identifier type in the <code>rqJWT: {rqJT identifierType}</code> isn't supported.</td>
-      </tr>
-      <tr>
-        <td>8**</td>
-        <td><strong>Unsupported identifier format:</strong> The identifier format in the <code>rqJWT {rqJT identifierFormat}</code> isn’t supported.</td>
-      </tr>
-      <tr>
-        <td>9**</td>
-        <td><strong>Incorrect identifier format:<strong> The identifier format in the <code>rqJWT: {rqJT identifierFormat}</code> does not match the format of the received <code>rqJWT</code>‘s <code>identifierValue</code>.</td>
-      </tr>
-       <tr>
-        <td>10**</td>
-        <td><strong>Invalid identifier value:</strong> The identifier value in the <code>rqJWT</code> is invalid (e.g. incorrect length).</td>
-      </tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr>
+      <th>Result Code</th>
+      <th>Result String</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>10000</td>
+      <td>success</td>
+      <td>Successful: Recipient has acknowledged successful receipt of the deletion request.</td>
+    </tr>
+    <tr>
+      <td>10010</td>
+      <td>unknown_error</td>
+      <td>Unknown error: An unexpected error occurred that does not correspond to any defined error condition.</td>
+    </tr>
+    <tr>
+      <td>11101</td>
+      <td>or_domain_connection_failed</td>
+      <td>Could not connect to the domain listed in the orJWT iss claim: <code>{orJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11102</td>
+      <td>or_dsrdelete_file_not_found</td>
+      <td>Could not find the dsrdelete.json file for the orJWT issuer: <code>{orJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11103</td>
+      <td>or_jwksuri_not_found</td>
+      <td>Could not find jwksUri entry in the dsrdelete.json for the orJWT issuer: <code>{orJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11104</td>
+      <td>or_jwks_keys_file_not_found</td>
+      <td>Could not find keys file: <code>{or dsrdelete.json jwksUri}</code> identified in the jwksUri entry in the dsrdelete.json in the orJWT issuer: <code>{orJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11105</td>
+      <td>or_jwks_kid_not_found</td>
+      <td>Could not find the key with kid: <code>{or kid}</code> in keys file identified: <code>{or dsrdelete.json jwksUri}</code> identified in the jwksUri entry in the dsrdelete.json for the orJWT issuer: <code>{orJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11201</td>
+      <td>rq_domain_connection_failed</td>
+      <td>Could not connect to the domain listed in rqJWT iss claim: <code>{rqJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11202</td>
+      <td>rq_dsrdelete_file_not_found</td>
+      <td>Could not find the dsrdelete.json file for the rqJWT issuer: <code>{rqJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11203</td>
+      <td>rq_jwksuri_not_found</td>
+      <td>Could not find jwksUri entry in the dsrdelete.json for the rqJWT issuer: <code>{rqJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11204</td>
+      <td>rq_jwks_keys_file_not_found</td>
+      <td>Could not find keys file: <code>{rq dsrdelete.json jwksUri}</code> identified in the jwksUri entry in the dsrdelete.json in the rqJWT issuer: <code>{rqJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>11205</td>
+      <td>rq_jwks_kid_not_found</td>
+      <td>Could not find the key with kid: <code>{rq kid}</code> in keys file identified: <code>{rq dsrdelete.json jwksUri}</code> identified in the jwksUri entry in the dsrdelete.json for the rqJWT issuer: <code>{rqJWT iss}</code>.</td>
+    </tr>
+    <tr>
+      <td>12101</td>
+      <td>or_alg_claim_mismatch</td>
+      <td>Request kid: <code>{orJWT kid}</code> alg claim: <code>{orJWT alg}</code> does not match the alg claim: <code>{key file alg}</code> in the keys file: <code>{or dsrdelete.json jwksUri}</code> for the kid.</td>
+    </tr>
+    <tr>
+      <td>12201</td>
+      <td>rq_alg_claim_mismatch</td>
+      <td>Request kid: <code>{rqJWT kid}</code> alg claim: <code>{rqJWT alg}</code> does not match the alg claim: <code>{key file alg}</code> in the keys file: <code>{rq dsrdelete.json jwksUri}</code> for the kid.</td>
+    </tr>
+    <tr>
+      <td>13101</td>
+      <td>or_invalid_token</td>
+      <td>Invalid token: The orJWT could not be successfully decoded. JSON token identifier: <code>{orJWT jti}</code>.</td>
+    </tr>
+    <tr>
+      <td>13102</td>
+      <td>or_invalid_token_signature</td>
+      <td>Invalid token signature: The signature provided in the orJWT is invalid. JSON token identifier: <code>{orJWT jti}</code>.</td>
+    </tr>
+    <tr>
+      <td>13103</td>
+      <td>or_invalid_token_timestamp</td>
+      <td>Invalid token timestamp: The timestamp provided in the orJWT is invalid: <code>{orJWT timestamp}</code>. The timestamp is a value which is not a positive integer.</td>
+    </tr>
+    <tr>
+      <td>13104</td>
+      <td>or_invalid_token_timestamp</td>
+      <td>Invalid token timestamp: The timestamp provided in the orJWT is invalid: <code>{orJWT timestamp}</code>. The timestamp is too far in the future: issued more than 5 minutes ahead of the token receipt.</td>
+    </tr>
+    <tr>
+      <td>13201</td>
+      <td>rq_invalid_token</td>
+      <td>Invalid token: The rqJWT could not be successfully decoded. JSON token identifier: <code>{rqJWT jti}</code>.</td>
+    </tr>
+    <tr>
+      <td>13202</td>
+      <td>rq_invalid_token_signature</td>
+      <td>Invalid token signature: The signature provided in the rqJWT is invalid. JSON token identifier: <code>{rqJWT jti}</code>.</td>
+    </tr>
+    <tr>
+      <td>13203</td>
+      <td>rq_invalid_token_timestamp</td>
+      <td>Invalid token timestamp: The timestamp provided in the rqJWT is invalid: <code>{rqJWT timestamp}</code>. The timestamp is a value which is not a positive integer.</td>
+    </tr>
+    <tr>
+      <td>13204</td>
+      <td>rq_invalid_token_timestamp_future</td>
+      <td>Invalid token timestamp: The timestamp provided in the rqJWT is invalid: <code>{rqJWT timestamp}</code>. The timestamp is too far in the future: issued more than 5 minutes ahead of the token receipt.</td>
+    </tr>
+    <tr>
+      <td>13205</td>
+      <td>rq_invalid_timestamp_sequence</td>
+      <td>Invalid timestamp sequence: The timestamp of rqJWT: <code>{rqJWT timestamp}</code> precedes the timestamp of orJWT: <code>{orJWT timestamp}</code>.</td>
+    </tr>
+    <tr>
+      <td>14201</td>
+      <td>rq_unsupported_identifier_type</td>
+      <td>Unsupported identifier type: The identifier type in the rqJWT: <code>{rqJWT identifierType}</code> isn't supported.</td>
+    </tr>
+    <tr>
+      <td>14202</td>
+      <td>rq_unsupported_identifier_format</td>
+      <td>Unsupported identifier format: The identifier format in the rqJWT <code>{rqJWT identifierFormat}</code> isn't supported.</td>
+    </tr>
+    <tr>
+      <td>14203</td>
+      <td>rq_incorrect_identifier_format</td>
+      <td>Incorrect identifier format: The identifier format in the rqJWT: <code>{rqJT identifierFormat}</code> does not match the format of the received rqJWT's identifierValue.</td>
+    </tr>
+    <tr>
+      <td>14204</td>
+      <td>rq_invalid_identifier_value</td>
+      <td>Invalid identifier value: The identifier value in the rqJWT is invalid (e.g. incorrect length).</td>
+    </tr>
+  </tbody>
+</table>
 </div>
 <h2>Identifiers</h2>
 <p>There are generally two classes of identifiers used in ad-interactions distinguished by access limitations: those which are directly accessible by 1st-parties and those which are only accessible to 3rd parties. The first class includes any identifiers available in the 1st-party context, including on web pages and 1st-party local storage. The second class includes identifiers maintained in protected 3rd-party storage, such as 3rd-party cookies. Probabilistic identifiers, which are based on constellations of data values, presumably may fall into the first, second or a combination of both classes, depending on how they are constructed.</p>
@@ -577,7 +647,7 @@
 <p>To accomplish this, this specification will use JSON Web Key Sets (JWKS). The JWKS standard (<a target="_blank" href="https://datatracker.ietf.org/doc/html/rfc7517">
     <span style="color:rgb(17, 85, 204);">RFC 7517</span>
   </a>) establishes a way to store and manage cryptographic keys as a set of JSON objects. JWKS supports asymmetric signature with a public key and private key pair, supporting the discoverability design of the <code>dsrdelete.json</code> file and the signature requirements of the data deletion framework.</p>
-  <p>Note that while <a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517</a> lists the <code>"alg"</code> and the <code>"kid"</code> parameters as optional, they are required in the context of this framework. </p>
+  <p>Note that while <a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517</a> lists the <code>"alg"</code> and the <code>"kid"</code> parameters as optional, they are required in the context of this framework to ensure all participants can easily locate verification keys.</p>
 <h5>Key Rotation and Caching</h5>  
 <p>Participants must support key rotation to maintain secure and reliable verification. Implementations should maintain a local cache of each participant's JWKS. Participants must refresh their cached JWKS according to the <code>pollFrequency</code>. When verifying a signed request, if a referenced key ID (<code>kid</code>) cannot be found in the cached key set, the participant must fetch a new copy of the requester's JWKS from the <code>jwksUri</code> location and update its cache accordingly.</p>
 <h5>JWKS Resources</h5>
