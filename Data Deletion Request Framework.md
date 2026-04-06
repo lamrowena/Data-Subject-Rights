@@ -317,7 +317,7 @@
       <tr>
       <td>identifierFormat</td>
       <td>string</td>
-      <td>The format of the identifier provided in the identifierValue field. The valur in this field must match a format specified in the intended recipients' dsrdelete.json file.</td>
+      <td>The format of the identifier provided in the identifierValue field. The value in this field must match a format specified in the intended recipients' dsrdelete.json file.</td>
       <td>required</td>
       </tr>
       <tr>
